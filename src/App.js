@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import AddTodo from './components/AddTodo'
+import { useSelector, useDispatch } from 'react-redux'
+import Header from './components/Header'
+import Filter from './components/Filters'
+import TodoList from './components/TodoList'
+import { filtered_todos } from './redux/todoSlice'
 
 function App() {
+  const dispatch = useDispatch()
+  let { todos } = useSelector((state) => state.todosReducer)
+  const sort = (parameter) => {
+    dispatch(filtered_todos(parameter))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <Header />
+      <div className='wrapper'>
+        <Filter sort={sort} />
+        <AddTodo />
+        {todos && todos.length === 0 ? (
+          <h4>No todos</h4>
+        ) : (
+          <TodoList todos={todos} />
+        )}
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
